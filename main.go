@@ -17,7 +17,7 @@ func main() {
 
 	// Create application with options
 	err := wails.Run(&options.App{
-		Title:     "mcpmgr",
+		Title:     "Mcpmgr",
 		Width:     980,
 		Height:    680,
 		MinWidth:  860,

@@ -95,7 +95,7 @@ export type MessageKey =
 
 export const messages: Record<Locale, Record<MessageKey, string>> = {
   'zh-CN': {
-    appName: 'mcpmgr',
+    appName: 'Mcpmgr',
     appTagline: '统一管理 MCP 服务并同步到各个 AI 客户端',
     navServers: '服务',
     navClients: '客户端',
@@ -188,7 +188,7 @@ export const messages: Record<Locale, Record<MessageKey, string>> = {
     previewClose: '关闭预览',
   },
   'en-US': {
-    appName: 'mcpmgr',
+    appName: 'Mcpmgr',
     appTagline: 'Manage MCP servers once and sync them across AI clients',
     navServers: 'Servers',
     navClients: 'Clients',
