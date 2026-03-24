@@ -5,3 +5,4 @@ frontend/dist
 frontend/package.json.md5
 mcpmgr
 .DS_Store
+build/releases
