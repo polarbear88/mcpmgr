@@ -2,26 +2,51 @@ package main
 
 import (
 	"context"
-	"fmt"
 )
 
-// App struct
 type App struct {
-	ctx context.Context
+	ctx     context.Context
+	service *AppService
 }
 
-// NewApp creates a new App application struct
 func NewApp() *App {
-	return &App{}
+	return &App{
+		service: NewAppService(),
+	}
 }
 
-// startup is called when the app starts. The context is saved
-// so we can call the runtime methods
 func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
 }
 
-// Greet returns a greeting for the given name
-func (a *App) Greet(name string) string {
-	return fmt.Sprintf("Hello %s, It's show time!", name)
+func (a *App) GetAppState() (AppState, error) {
+	return a.service.GetState()
+}
+
+func (a *App) SaveServer(input ServerInput) (AppState, error) {
+	return a.service.SaveServer(input)
+}
+
+func (a *App) DeleteServer(id string) (AppState, error) {
+	return a.service.DeleteServer(id)
+}
+
+func (a *App) ApplyToAllClients() (ApplyResult, error) {
+	return a.service.ApplyToAllClients()
+}
+
+func (a *App) PreviewClientConfig(clientID string) (ClientConfigPreview, error) {
+	return a.service.PreviewClientConfig(clientID)
+}
+
+func (a *App) PreviewAppConfig() (ClientConfigPreview, error) {
+	return a.service.PreviewAppConfig()
+}
+
+func (a *App) EnableClient(clientID string) (AppState, error) {
+	return a.service.EnableClient(clientID)
+}
+
+func (a *App) DisableClient(clientID string, restoreBackup bool) (AppState, error) {
+	return a.service.DisableClient(clientID, restoreBackup)
 }

@@ -1,3 +1,7 @@
 build/bin
 node_modules
 frontend/dist
+.pnpm-store
+frontend/package.json.md5
+mcpmgr
+.DS_Store
