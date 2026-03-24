@@ -1,0 +1,2 @@
+# mcpmgr
+mcp server manager
