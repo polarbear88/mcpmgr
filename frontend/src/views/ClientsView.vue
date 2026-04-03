@@ -4,6 +4,7 @@ import openaiLogo from '../assets/client-logos/openai.svg'
 import claudeLogo from '../assets/client-logos/claude-color.svg'
 import githubCopilotLogo from '../assets/client-logos/githubcopilot.svg'
 import vscodeLogo from '../assets/client-logos/vscode.svg'
+import opencodeLogo from '../assets/client-logos/opencode.svg'
 import type { AppState, ClientStatus } from '../types/app'
 
 defineProps<{
@@ -26,6 +27,7 @@ const clientLogos: Record<ClientStatus['id'], string> = {
   claude_desktop: claudeLogo,
   copilot_cli: githubCopilotLogo,
   vscode: vscodeLogo,
+  opencode: opencodeLogo,
 }
 
 const monochromeLogoClients = new Set<ClientStatus['id']>(['codex', 'copilot_cli'])

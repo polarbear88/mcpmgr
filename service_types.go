@@ -125,3 +125,7 @@ type CopilotCLIAdapter struct {
 type VSCodeAdapter struct {
 	clientBase
 }
+
+type OpenCodeAdapter struct {
+	clientBase
+}

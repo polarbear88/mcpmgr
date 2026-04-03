@@ -17,6 +17,7 @@ func NewAppService() *AppService {
 			NewClaudeDesktopAdapter(),
 			NewCopilotCLIAdapter(),
 			NewVSCodeAdapter(),
+			NewOpenCodeAdapter(),
 		},
 	}
 }

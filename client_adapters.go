@@ -256,3 +256,53 @@ func claudeDesktopNotes() string {
 	}
 	return "Updates claude_desktop_config.json while preserving unmanaged MCP entries."
 }
+
+func NewOpenCodeAdapter() *OpenCodeAdapter {
+	return &OpenCodeAdapter{
+		clientBase: clientBase{
+			id:      "opencode",
+			name:    "OpenCode",
+			path:    openCodeConfigPath(),
+			format:  "json",
+			support: true,
+			notes:   "Writes OpenCode MCP servers into the top-level mcp object in opencode.json.",
+		},
+	}
+}
+
+func (a *OpenCodeAdapter) Apply(servers []MCPServer, previous []string) ApplyTargetResult {
+	selected := servers
+	if err := applyOpenCodeConfig(a.path, selected, previous); err != nil {
+		return ApplyTargetResult{
+			ClientID:   a.id,
+			ClientName: a.name,
+			Path:       a.path,
+			Success:    false,
+			Message:    err.Error(),
+		}
+	}
+
+	return ApplyTargetResult{
+		ClientID:   a.id,
+		ClientName: a.name,
+		Path:       a.path,
+		Success:    true,
+		Message:    fmt.Sprintf("Applied %d server(s).", len(selected)),
+	}
+}
+
+func openCodeConfigPath() string {
+	home, _ := os.UserHomeDir()
+	switch runtime.GOOS {
+	case "darwin":
+		return filepath.Join(home, ".config", "opencode", "opencode.json")
+	case "windows":
+		appData := os.Getenv("APPDATA")
+		if appData == "" {
+			return filepath.Join(home, "AppData", "Roaming", "opencode", "opencode.json")
+		}
+		return filepath.Join(appData, "opencode", "opencode.json")
+	default:
+		return filepath.Join(home, ".config", "opencode", "opencode.json")
+	}
+}

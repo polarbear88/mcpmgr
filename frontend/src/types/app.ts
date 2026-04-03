@@ -1,7 +1,7 @@
 export type ThemeMode = 'system' | 'light' | 'dark'
 export type Locale = 'zh-CN' | 'en-US'
 export type ServerType = 'stdio' | 'http'
-export type ClientID = 'codex' | 'claude_code' | 'claude_desktop' | 'copilot_cli' | 'vscode'
+export type ClientID = 'codex' | 'claude_code' | 'claude_desktop' | 'copilot_cli' | 'vscode' | 'opencode'
 export type ViewID = 'servers' | 'clients' | 'settings'
 
 export type MCPServer = {

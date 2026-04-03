@@ -331,6 +331,8 @@ func captureClientBackup(clientID, path string) (ClientBackup, error) {
 		}, nil
 	case "vscode":
 		return captureJSONSectionBackup(path, "servers")
+	case "opencode":
+		return captureJSONSectionBackup(path, "mcp")
 	default:
 		return captureJSONSectionBackup(path, "mcpServers")
 	}
@@ -354,6 +356,8 @@ func restoreClientBackup(clientID, path string, backup ClientBackup) error {
 		return writeTextFile(path, next)
 	case "vscode":
 		return restoreJSONSectionBackup(path, "servers", backup)
+	case "opencode":
+		return restoreJSONSectionBackup(path, "mcp", backup)
 	default:
 		return restoreJSONSectionBackup(path, "mcpServers", backup)
 	}
@@ -476,4 +480,58 @@ func tomlBareKey(value string) string {
 	}
 
 	return value
+}
+
+func applyOpenCodeConfig(path string, servers []MCPServer, previous []string) error {
+	root := map[string]any{}
+
+	data, err := os.ReadFile(path)
+	if err != nil && !errors.Is(err, os.ErrNotExist) {
+		return err
+	}
+	if len(data) > 0 {
+		if err := json.Unmarshal(data, &root); err != nil {
+			return fmt.Errorf("parse %s: %w", path, err)
+		}
+	}
+
+	_ = previous
+	mcpServers := map[string]any{}
+	for _, server := range servers {
+		mcpServers[server.Name] = openCodeConfigForServer(server)
+	}
+
+	root["mcp"] = mcpServers
+
+	output, err := json.MarshalIndent(root, "", "  ")
+	if err != nil {
+		return err
+	}
+
+	return writeTextFile(path, string(output)+"\n")
+}
+
+func openCodeConfigForServer(server MCPServer) map[string]any {
+	config := map[string]any{}
+
+	if server.Type == "http" {
+		config["type"] = "remote"
+		config["url"] = server.URL
+	} else {
+		config["type"] = "local"
+		command := []string{server.Command}
+		if len(server.Args) > 0 {
+			command = append(command, server.Args...)
+		}
+		config["command"] = command
+	}
+
+	if len(server.Env) > 0 {
+		config["environment"] = server.Env
+	}
+	if server.WorkingDir != "" {
+		config["cwd"] = server.WorkingDir
+	}
+
+	return config
 }
