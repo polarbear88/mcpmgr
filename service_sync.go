@@ -58,6 +58,7 @@ func renderCodexManagedBlock(servers []MCPServer) string {
 	for _, server := range servers {
 		b.WriteString(fmt.Sprintf("[mcp_servers.%s]\n", tomlBareKey(server.Name)))
 		if server.Type == "http" {
+			b.WriteString("enabled = true\n")
 			b.WriteString(fmt.Sprintf("url = %s\n", tomlString(server.URL)))
 		} else {
 			b.WriteString(fmt.Sprintf("command = %s\n", tomlString(server.Command)))
@@ -71,7 +72,11 @@ func renderCodexManagedBlock(servers []MCPServer) string {
 		}
 
 		if len(server.Env) > 0 {
-			b.WriteString(fmt.Sprintf("[mcp_servers.%s.env]\n", tomlBareKey(server.Name)))
+			sectionName := "env"
+			if server.Type == "http" {
+				sectionName = "http_headers"
+			}
+			b.WriteString(fmt.Sprintf("[mcp_servers.%s.%s]\n", tomlBareKey(server.Name), sectionName))
 			keys := make([]string, 0, len(server.Env))
 			for key := range server.Env {
 				keys = append(keys, key)
