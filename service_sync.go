@@ -260,16 +260,18 @@ func jsonConfigForServer(server MCPServer) map[string]any {
 	if server.Type == "http" {
 		config["type"] = "http"
 		config["url"] = server.URL
+		if len(server.Env) > 0 {
+			config["headers"] = server.Env
+		}
 	} else {
 		config["type"] = "stdio"
 		config["command"] = server.Command
 		if len(server.Args) > 0 {
 			config["args"] = server.Args
 		}
-	}
-
-	if len(server.Env) > 0 {
-		config["env"] = server.Env
+		if len(server.Env) > 0 {
+			config["env"] = server.Env
+		}
 	}
 	if server.WorkingDir != "" {
 		config["cwd"] = server.WorkingDir
@@ -517,6 +519,9 @@ func openCodeConfigForServer(server MCPServer) map[string]any {
 	if server.Type == "http" {
 		config["type"] = "remote"
 		config["url"] = server.URL
+		if len(server.Env) > 0 {
+			config["headers"] = server.Env
+		}
 	} else {
 		config["type"] = "local"
 		command := []string{server.Command}
@@ -524,10 +529,9 @@ func openCodeConfigForServer(server MCPServer) map[string]any {
 			command = append(command, server.Args...)
 		}
 		config["command"] = command
-	}
-
-	if len(server.Env) > 0 {
-		config["environment"] = server.Env
+		if len(server.Env) > 0 {
+			config["environment"] = server.Env
+		}
 	}
 	if server.WorkingDir != "" {
 		config["cwd"] = server.WorkingDir

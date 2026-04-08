@@ -65,9 +65,9 @@ const title = computed(() =>
         </label>
 
         <label class="field" :class="{ 'field--full': form.type === 'http' }">
-          <span>{{ t('env') }}</span>
+          <span>{{ form.type === 'http' ? t('headers') : t('env') }}</span>
           <textarea v-model="form.envText" rows="5" />
-          <small>{{ t('envHint') }}</small>
+          <small>{{ form.type === 'http' ? t('headersHint') : t('envHint') }}</small>
         </label>
 
         <label class="field">

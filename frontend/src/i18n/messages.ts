@@ -53,6 +53,8 @@ export type MessageKey =
   | 'argsHint'
   | 'env'
   | 'envHint'
+  | 'headers'
+  | 'headersHint'
   | 'workingDir'
   | 'notes'
   | 'save'
@@ -147,6 +149,8 @@ export const messages: Record<Locale, Record<MessageKey, string>> = {
     argsHint: '每行一个参数',
     env: '环境变量',
     envHint: '每行一个 KEY=VALUE',
+    headers: 'Headers',
+    headersHint: '每行一个 Header=Value',
     workingDir: '工作目录',
     notes: '备注',
     save: '保存',
@@ -240,6 +244,8 @@ export const messages: Record<Locale, Record<MessageKey, string>> = {
     argsHint: 'One argument per line',
     env: 'Environment',
     envHint: 'One KEY=VALUE per line',
+    headers: 'Headers',
+    headersHint: 'One Header=Value per line',
     workingDir: 'Working directory',
     notes: 'Notes',
     save: 'Save',
