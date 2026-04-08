@@ -129,7 +129,16 @@ func NewClaudeDesktopAdapter() *ClaudeDesktopAdapter {
 }
 
 func (a *ClaudeDesktopAdapter) Apply(servers []MCPServer, previous []string) ApplyTargetResult {
-	selected := servers
+	selected := make([]MCPServer, 0, len(servers))
+	skippedRemote := 0
+	for _, server := range servers {
+		if server.Type == "http" {
+			skippedRemote++
+			continue
+		}
+		selected = append(selected, server)
+	}
+
 	if err := applyJSONConfig(a.path, selected, previous); err != nil {
 		return ApplyTargetResult{
 			ClientID:   a.id,
@@ -145,7 +154,7 @@ func (a *ClaudeDesktopAdapter) Apply(servers []MCPServer, previous []string) App
 		ClientName: a.name,
 		Path:       a.path,
 		Success:    true,
-		Message:    fmt.Sprintf("Applied %d server(s).", len(selected)),
+		Message:    claudeDesktopApplyMessage(len(selected), skippedRemote),
 	}
 }
 
@@ -252,9 +261,17 @@ func vscodeMCPPath() string {
 
 func claudeDesktopNotes() string {
 	if runtime.GOOS == "linux" {
-		return "Uses ~/.config/Claude/claude_desktop_config.json as the Linux target path."
+		return "Uses ~/.config/Claude/claude_desktop_config.json as the Linux target path. Remote MCP servers must be added from Settings > Connectors."
 	}
-	return "Updates claude_desktop_config.json while preserving unmanaged MCP entries."
+	return "Updates claude_desktop_config.json for local stdio MCP servers only. Remote MCP servers must be added from Settings > Connectors."
+}
+
+func claudeDesktopApplyMessage(appliedCount, skippedRemote int) string {
+	if skippedRemote == 0 {
+		return fmt.Sprintf("Applied %d server(s).", appliedCount)
+	}
+
+	return fmt.Sprintf("Applied %d stdio server(s); skipped %d remote HTTP server(s).", appliedCount, skippedRemote)
 }
 
 func NewOpenCodeAdapter() *OpenCodeAdapter {
